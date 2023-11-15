@@ -9,63 +9,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import OneHotEncoder
 import catboost
 
+from common_module import encode_predict_data, preprocess_data
+
 import pickle
-
-
-print("Reading data")
-
-raw_df = pd.read_csv("students_adaptability_level_online_education.csv")
-
-print("Data processing")
-
-raw_X = raw_df.drop("Adaptivity Level", axis=1)
-raw_y = raw_df["Adaptivity Level"]
-
-X_full_train, X_test, y_full_train, y_test = train_test_split(
-    raw_X, raw_y, test_size=0.2, random_state=1
-)
-
-X_full_train.reset_index(drop=True, inplace=True)
-X_test.reset_index(drop=True, inplace=True)
-y_full_train.reset_index(drop=True, inplace=True)
-y_test.reset_index(drop=True, inplace=True)
-
-X_full_train.columns = X_full_train.columns.str.replace(" ", "_").str.lower()
-
-cols = X_full_train.columns.tolist()
-
-cols_str = cols.copy()
-cols_str.remove("age")
-cols_str.remove("class_duration")
-
-X_full_train[cols_str] = X_full_train[cols_str].apply(
-    lambda x: x.str.lower().str.replace(" ", "_")
-)
-
-X_full_train.institution_type = X_full_train.institution_type.replace(
-    {"government": 1, "non_government": 0}
-)
-X_full_train.it_student = X_full_train.it_student.replace({"yes": 1, "no": 0})
-X_full_train.location = X_full_train.location.replace({"yes": 1, "no": 0})
-X_full_train.self_lms = X_full_train.self_lms.replace({"yes": 1, "no": 0})
-
-
-def encode_predict_data(logreg_model, rf_model, boosting_model, X, X_OHEd):
-    """Predicts X's score from 3 models, combines and encodes the results,
-    returns:
-    - stacked_predictions_encoded
-    """
-    preds_logreg = logreg_model.predict(X_OHEd)
-    preds_rf = rf_model.predict(X_OHEd)
-    preds_boosting = boosting_model.predict(X)
-
-    stacked_predictions = np.column_stack((preds_logreg, preds_rf, preds_boosting))
-    classes = {"Low": 0, "Moderate": 1, "High": 2}
-    stacked_predictions_encoded = [
-        [classes[label] for label in row] for row in stacked_predictions
-    ]
-
-    return stacked_predictions_encoded
 
 
 def prepare_train_get_metrics(X_1, y_1, X_2, y_2):
@@ -121,30 +67,91 @@ def prepare_train_get_metrics(X_1, y_1, X_2, y_2):
     )
 
 
-X_test.columns = X_test.columns.str.replace(" ", "_").str.lower()
-X_test[cols_str] = X_test[cols_str].apply(lambda x: x.str.lower().str.replace(" ", "_"))
+def encode_predict_data(logreg_model, rf_model, boosting_model, X, X_OHEd):
+    """Predicts X's score from 3 models, combines and encodes the results,
+    returns:
+    - stacked_predictions_encoded
+    """
+    preds_logreg = logreg_model.predict(X_OHEd)
+    preds_rf = rf_model.predict(X_OHEd)
+    preds_boosting = boosting_model.predict(X)
 
-X_test.institution_type = X_test.institution_type.replace(
-    {"government": 1, "non_government": 0}
-)
-X_test.it_student = X_test.it_student.replace({"yes": 1, "no": 0})
-X_test.location = X_test.location.replace({"yes": 1, "no": 0})
-X_test.self_lms = X_test.self_lms.replace({"yes": 1, "no": 0})
+    stacked_predictions = np.column_stack((preds_logreg, preds_rf, preds_boosting))
+    classes = {"Low": 0, "Moderate": 1, "High": 2}
+    stacked_predictions_encoded = [
+        [classes[label] for label in row] for row in stacked_predictions
+    ]
 
-X_test = X_test.fillna(0)
+    return stacked_predictions_encoded
 
-print("Training of the model")
 
-full_train_acc, full_train_f1, OHE, models, stack_model = prepare_train_get_metrics(
-    X_full_train, y_full_train, X_test, y_test
-)
-print(f"Accuracy: {full_train_acc}, f1: {full_train_f1}")
+def preprocess_data(df, cols_str):
+    df.columns = df.columns.str.replace(" ", "_").str.lower()
+    df[cols_str] = df[cols_str].apply(lambda x: x.str.lower().str.replace(" ", "_"))
 
-model_file = "model.bin"
+    df.institution_type = df.institution_type.replace(
+        {"government": 1, "non_government": 0}
+    )
+    df.it_student = df.it_student.replace({"yes": 1, "no": 0})
+    df.location = df.location.replace({"yes": 1, "no": 0})
+    df.self_lms = df.self_lms.replace({"yes": 1, "no": 0})
 
-print("Saving the model")
+    df = df.fillna(0)
 
-with open(model_file, "wb") as f_out:
-    pickle.dump((OHE, models, stack_model), f_out)
+    return df
 
-print(f"the model is saved to {model_file}")
+
+if __name__ == "__main__":
+    print("Reading data")
+    raw_df = pd.read_csv("students_adaptability_level_online_education.csv")
+
+    print("Data processing")
+
+    raw_X = raw_df.drop("Adaptivity Level", axis=1)
+    raw_y = raw_df["Adaptivity Level"]
+
+    X_full_train, X_test, y_full_train, y_test = train_test_split(
+        raw_X, raw_y, test_size=0.2, random_state=1
+    )
+
+    X_full_train.reset_index(drop=True, inplace=True)
+    X_test.reset_index(drop=True, inplace=True)
+    y_full_train.reset_index(drop=True, inplace=True)
+    y_test.reset_index(drop=True, inplace=True)
+
+    X_full_train.columns = X_full_train.columns.str.replace(" ", "_").str.lower()
+
+    cols = X_full_train.columns.tolist()
+
+    cols_str = cols.copy()
+    cols_str.remove("age")
+    cols_str.remove("class_duration")
+
+    X_full_train[cols_str] = X_full_train[cols_str].apply(
+        lambda x: x.str.lower().str.replace(" ", "_")
+    )
+
+    X_full_train.institution_type = X_full_train.institution_type.replace(
+        {"government": 1, "non_government": 0}
+    )
+    X_full_train.it_student = X_full_train.it_student.replace({"yes": 1, "no": 0})
+    X_full_train.location = X_full_train.location.replace({"yes": 1, "no": 0})
+    X_full_train.self_lms = X_full_train.self_lms.replace({"yes": 1, "no": 0})
+
+    X_test = preprocess_data(X_test, cols_str)
+
+    print("Training of the model")
+
+    full_train_acc, full_train_f1, OHE, models, stack_model = prepare_train_get_metrics(
+        X_full_train, y_full_train, X_test, y_test
+    )
+    print(f"Accuracy: {full_train_acc}, f1: {full_train_f1}")
+
+    model_file = "model.bin"
+
+    print("Saving the model")
+
+    with open(model_file, "wb") as f_out:
+        pickle.dump((cols_str, OHE, models, stack_model), f_out)
+
+    print(f"the model is saved to {model_file}")
