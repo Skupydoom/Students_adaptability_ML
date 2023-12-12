@@ -20,7 +20,6 @@ app = Flask("adaptability")
 def predict():
     customer = request.get_json()
     customer = pd.DataFrame([customer])
-    print(customer.iloc[0])
 
     X = preprocess_data(customer, cols_str)
 
