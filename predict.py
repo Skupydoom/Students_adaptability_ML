@@ -4,7 +4,7 @@ from flask import request
 from flask import jsonify
 import pandas as pd
 
-from train import encode_predict_data, preprocess_data
+from common_module import encode_predict_data, preprocess_data
 
 
 model_file = "model.bin"
