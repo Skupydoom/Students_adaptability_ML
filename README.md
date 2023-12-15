@@ -32,5 +32,9 @@ Students' Adaptability Level Prediction in Online Education using Machine Learni
 # The structure of the repo 
 - A Jupyter notebook file "data_analysis.ipynb" with a comprehensive analysis of the data;
 - The dataset "students_adaptability_level_online_education.csv";
-- A script "train.py" that trains the final model and saves it to the binary file.
+- Two dependency files: "Pipfile" and "Pipfile.lock";
+- A script "train.py" that trains the final model and saves it to the binary file;
+- A script "predict.py" which is a web service. It can be started with a Gunicorn;
+- A binary file "model.bin" with important variables of the trained model;
+- A script "predict_test.py" to test the web service;
 - ...
