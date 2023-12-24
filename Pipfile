@@ -9,6 +9,8 @@ scikit-learn = "==1.0.2"
 flask = "*"
 gunicorn = "*"
 catboost = "*"
+pandas = "*"
+scipy = "*"
 
 [dev-packages]
 
