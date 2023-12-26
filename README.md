@@ -37,4 +37,20 @@ Students' Adaptability Level Prediction in Online Education using Machine Learni
 - A script "predict.py" which is a web service. It can be started with a Gunicorn;
 - A binary file "model.bin" with important variables of the trained model;
 - A script "predict_test.py" to test the web service;
-- ...
+- A Dockerfile for deploying a web service;
+- A script "predict_test.py" to test the web service.
+
+# How to deploy and use the web service
+&emsp;Firstly, you need to habe Docker installed on your system.
+Secondly, open your terminal and go to the repo folder.
+Finally, type and apply these two commands:
+1. docker build -t student_ml_prod .
+2. docker run -it --rm -p 9696:9696 student_ml_prod
+
+The first one will build a docker image. The second is to start the server to receive requests.  
+The web service can be tested by running the "predict_test.py" script when the docker container is started. Any data can be changed in the script if it is in the possible values in the "students_adaptability_level_online_education.csv" file (unknown values are encoded as zeros).
+The possible server responses are:
+- Low
+- Moderate
+- High
+They show the student's level of adaptability according to their characteristics.
