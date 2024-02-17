@@ -1,3 +1,5 @@
+Версия на русском:
+[![ru](https://img.shields.io/badge/lang-ru-blue.svg)](https://github.com/Skupydoom/Students_adaptability_ML/blob/main/README_RUS.md)
 # Problem description:  
 &emsp;A wide variety of educational courses are available on the Internet. Their popularity has increased significantly since the pandemic. Some are free, others have to be paid for. Short-term courses are acceptable, but there are also whole university programmes that last several years. These programmes can be quite expensive because the instructors have invested a lot of time in them. They require considerable effort on the part of the students.  
 &emsp;Both the organizers of these programmes and the participants consider it unprofitable if students drop out in the middle of the course. It would be useful to assess a person's ability to complete a course on the basis of certain personal information. For example, one of the options could be a pre-course survey before payment. Several possible actions could be taken afterwards:
