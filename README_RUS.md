@@ -53,5 +53,5 @@ Students' Adaptability Level Prediction in Online Education using Machine Learni
 Список возможных ответов сервера:  
 - Low
 - Moderate
-- High
+- High  
 Низкий, средний и высокий уровень адаптации студента, согласно его характеристикам, соответственно.
