@@ -27,7 +27,7 @@ English version:
 &emsp;Целевой столбец:  
 - "Adaptivity Level": уровень адаптации студента.  
 
-Набор данных доступен на Kagglel.com по ссылке: https://www.kaggle.com/datasets/mdmahmudulhasansuzan/students-adaptability-level-in-online-education/data  
+Набор данных доступен на Kaggle.com по ссылке: https://www.kaggle.com/datasets/mdmahmudulhasansuzan/students-adaptability-level-in-online-education/data  
 Оригинальная научная статья:  
 Students' Adaptability Level Prediction in Online Education using Machine Learning Approaches or DOI: **10.1109/ICCCNT51525.2021.9579741**  
 
